@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EIRS — Emergency Incident Roster System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-w: 240px;
+      --dark:      #111827;
+      --dark-mid:  #1f2937;
+      --accent:    #3b82f6;
+      --accent-hover: #2563eb;
+      --text:      #111827;
+      --muted:     #6b7280;
+      --border:    #e5e7eb;
+      --bg:        #f8fafc;
+      --card:      #ffffff;
+      --mono:      'JetBrains Mono', monospace;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 13.5px;
+      background: linear-gradient(140deg, #eef2ff 0%, #f9fafb 55%, #f0fdf4 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: var(--dark);
+      color: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      padding: 24px 18px 16px;
+      border-bottom: 1px solid #374151;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .brand-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      line-height: 1.3;
+      color: #f9fafb;
+    }
+
+    .brand-sub {
+      font-size: 10.5px;
+      color: #9ca3af;
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    .sidebar-nav {
+      padding: 14px 0;
+      flex: 1;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6b7280;
+      padding: 10px 18px 5px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 18px;
+      font-size: 13px;
+      color: #d1d5db;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: background 0.12s;
+      user-select: none;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: #1f2937;
+      color: #fff;
+      border-left-color: var(--accent);
+    }
+
+    .nav-item.dim { opacity: 0.4; cursor: default; }
+
+    .nav-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 14px 18px;
+      border-top: 1px solid #374151;
+    }
+
+    .footer-label { font-size: 10.5px; color: #6b7280; }
+
+    .footer-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 7px;
+    }
+
+    .footer-user .online-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      flex-shrink: 0;
+    }
+
+    .footer-user .uname {
+      font-size: 13px;
+      font-weight: 500;
+      color: #f9fafb;
+    }
+
+    .footer-user .urole {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    /* ── Main ── */
+    .main-wrap {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 11px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0;
+      z-index: 50;
+    }
+
+    .topbar-title { font-size: 13.5px; font-weight: 600; }
+    .topbar-clock { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+
+    .content {
+      padding: 22px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── Stats ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 15px 17px;
+    }
+
+    .stat-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 5px;
+      font-family: var(--mono);
+      line-height: 1;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── Two col ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fafafa;
+    }
+
+    .card-header h2 {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .card-body { padding: 15px 16px; }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .toolbar label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    select, input[type="number"] {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 5px 9px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(59,130,246,0.12);
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      border-radius: 5px;
+      padding: 5px 13px;
+      font-size: 12.5px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-ghost { background: #fff; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { background: #f9fafb; color: var(--text); }
+
+    .btn-resolve { background: #fff; color: #dc2626; border: 1px solid #fca5a5; font-size: 12px; padding: 4px 10px; }
+    .btn-resolve:hover { background: #fef2f2; }
+
+    /* ── Tables ── */
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { border-bottom: 1px solid var(--border); }
+
+    th {
+      padding: 7px 11px;
+      text-align: left;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    td {
+      padding: 9px 11px;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 13px;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #f9fafb; }
+
+    .mono { font-family: var(--mono); font-size: 12px; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .b-open     { background: #fef9c3; color: #854d0e; }
+    .b-resolved { background: #dcfce7; color: #166534; }
+    .b-avail    { background: #dcfce7; color: #166534; }
+    .b-busy     { background: #fee2e2; color: #991b1b; }
+    .b-flag     { background: #fee2e2; color: #991b1b; }
+    .b-ok       { background: #f3f4f6; color: #6b7280; }
+    .b-low      { background: #dbeafe; color: #1e40af; }
+    .b-high     { background: #fef3c7; color: #92400e; }
+    .b-critical { background: #fee2e2; color: #991b1b; }
+
+    .empty { padding: 26px 11px; text-align: center; color: #9ca3af; font-size: 13px; }
+
+    .divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 22px; right: 22px;
+      background: #111827;
+      color: #f9fafb;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      display: none;
+      z-index: 999;
+      max-width: 320px;
+      line-height: 1.5;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+    }
+  </style>
+</head>
+<body>
+
+<aside>
+  <div class="sidebar-brand">
+    <div class="brand-text">
+      <div class="brand-title">Emergency Incident<br>Response System</div>
+      <div class="brand-sub">Spectrum Care NZ</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-label">Active</div>
+    <div class="nav-item active" onclick="navClick(this, 'section-incidents')">
+      <span class="nav-dot"></span> Incidents
+    </div>
+    <div class="nav-item" onclick="navClick(this, 'section-staff')">
+      <span class="nav-dot"></span> Staff
+    </div>
+    <div class="nav-item" onclick="navClick(this, 'section-timesheets')">
+      <span class="nav-dot"></span> Timesheets
+    </div>
+
+    <div class="nav-label" style="margin-top:10px;">Planned</div>
+    <div class="nav-item dim"><span class="nav-dot"></span> Shift Schedule</div>
+    <div class="nav-item dim"><span class="nav-dot"></span> Reports</div>
+    <div class="nav-item dim"><span class="nav-dot"></span> Access Control</div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="footer-label">Signed in as</div>
+    <div class="footer-user">
+      <div class="online-dot"></div>
+      <span class="uname">Leia</span>
+      <span class="urole">Incident Manager</span>
+    </div>
+  </div>
+</aside>
+
+<div class="main-wrap">
+  <div class="topbar">
+    <div class="topbar-title">Dashboard</div>
+    <div class="topbar-clock" id="clock">--:--:--</div>
+  </div>
+
+  <div class="content">
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total Incidents</div>
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-sub">logged this session</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Open</div>
+        <div class="stat-value" id="stat-open">0</div>
+        <div class="stat-sub">awaiting resolution</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Staff Available</div>
+        <div class="stat-value" id="stat-avail">—</div>
+        <div class="stat-sub">of 3 support workers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Flagged Hours</div>
+        <div class="stat-value" id="stat-flags">0</div>
+        <div class="stat-sub">exceed 12h threshold</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+
+      <div class="card" id="section-incidents">
+        <div class="card-header">
+          <h2>Incidents</h2>
+          <button class="btn btn-ghost" onclick="loadIncidents()">Refresh</button>
+        </div>
+        <div class="card-body">
+          <div class="toolbar">
+            <label>Severity</label>
+            <select id="severity">
+              <option>Low</option>
+              <option selected>High</option>
+              <option>Critical</option>
+            </select>
+            <button class="btn btn-primary" onclick="createIncident()">Log Incident</button>
+          </div>
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Severity</th><th>Status</th><th>Assigned To</th><th>Time</th><th></th></tr>
+            </thead>
+            <tbody id="incident-body">
+              <tr><td colspan="6" class="empty">No incidents logged.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" id="section-staff">
+        <div class="card-header">
+          <h2>Staff Availability</h2>
+          <button class="btn btn-ghost" onclick="loadStaff()">Refresh</button>
+        </div>
+        <div class="card-body">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Name</th><th>Status</th><th>Hours</th><th>Homes</th></tr>
+            </thead>
+            <tbody id="staff-body">
+              <tr><td colspan="5" class="empty">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card" id="section-timesheets">
+      <div class="card-header">
+        <h2>Timesheets</h2>
+        <button class="btn btn-ghost" onclick="loadTimesheets()">Refresh</button>
+      </div>
+      <div class="card-body">
+        <div class="toolbar">
+          <label>Staff</label>
+          <select id="ts-staff"></select>
+          <label>Incident</label>
+          <select id="ts-incident"></select>
+          <label>Hours</label>
+          <input type="number" id="ts-hours" min="0" max="24" step="0.5" value="8" style="width:74px;"/>
+          <button class="btn btn-primary" onclick="logTimesheet()">Log Hours</button>
+        </div>
+        <div class="divider"></div>
+        <table>
+          <thead>
+            <tr><th>Staff</th><th>Incident</th><th>Hours</th><th>Status</th></tr>
+          </thead>
+          <tbody id="ts-body">
+            <tr><td colspan="4" class="empty">No timesheet records.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const API = "http://localhost:5000";
+
+  // clock
+  setInterval(() => {
+    document.getElementById("clock").textContent = new Date().toLocaleTimeString();
+  }, 1000);
+
+  function navClick(el, targetId) {
+    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+    el.classList.add("active");
+    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function toast(msg) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.style.display = "block";
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.style.display = "none", 4000);
+  }
+
+  function sevBadge(s) {
+    const cls = { low: "b-low", high: "b-high", critical: "b-critical" };
+    return `<span class="badge ${cls[(s||"").toLowerCase()] || ""}">${s}</span>`;
+  }
+
+  async function loadStaff() {
+    const data = await fetch(`${API}/staff`).then(r => r.json());
+    document.getElementById("stat-avail").textContent = data.filter(s => s.isAvailable).length;
+
+    document.getElementById("staff-body").innerHTML = data.map(s => `
+      <tr>
+        <td class="mono">${s.staffId}</td>
+        <td style="font-weight:500">${s.name}</td>
+        <td><span class="badge ${s.isAvailable ? "b-avail" : "b-busy"}">${s.isAvailable ? "Available" : "On Call"}</span></td>
+        <td class="mono">${s.hoursWorked}h</td>
+        <td style="color:var(--muted)">${s.homes.join(", ")}</td>
+      </tr>`).join("");
+
+    document.getElementById("ts-staff").innerHTML =
+      data.map(s => `<option value="${s.staffId}">${s.name}</option>`).join("");
+  }
+
+  async function loadIncidents() {
+    const data = await fetch(`${API}/incidents`).then(r => r.json());
+
+    document.getElementById("stat-total").textContent = data.length;
+    document.getElementById("stat-open").textContent  = data.filter(i => i.status === "Open").length;
+
+    if (!data.length) {
+      document.getElementById("incident-body").innerHTML =
+        `<tr><td colspan="6" class="empty">No incidents logged.</td></tr>`;
+      return;
+    }
+
+    document.getElementById("incident-body").innerHTML = data.map(i => `
+      <tr>
+        <td class="mono">${i.incidentId}</td>
+        <td style="padding: 9px 11px;">${sevBadge(i.severity)}</td>
+        <td><span class="badge ${i.status === "Resolved" ? "b-resolved" : "b-open"}">${i.status}</span></td>
+        <td style="color:var(--muted)">${i.allocatedWorker}</td>
+        <td class="mono" style="color:var(--muted)">${i.timestamp}</td>
+        <td>${i.status === "Open"
+          ? `<button class="btn btn-resolve" onclick="resolveIncident('${i.incidentId}')">Resolve</button>`
+          : "—"}</td>
+      </tr>`).join("");
+
+    document.getElementById("ts-incident").innerHTML =
+      data.map(i => `<option value="${i.incidentId}">${i.incidentId} (${i.severity})</option>`).join("");
+  }
+
+  async function createIncident() {
+    const severity = document.getElementById("severity").value;
+    const data = await fetch(`${API}/incidents`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ severity })
+    }).then(r => r.json());
+
+    toast(`${data.incidentId} logged. Allocated to: ${data.allocatedTo}`);
+    loadIncidents();
+    loadStaff();
+  }
+
+  async function resolveIncident(id) {
+    await fetch(`${API}/incidents/${id}/resolve`, { method: "POST" });
+    toast(`${id} resolved. Worker returned to roster.`);
+    loadIncidents();
+    loadStaff();
+  }
+
+  async function loadTimesheets() {
+    const data = await fetch(`${API}/timesheets`).then(r => r.json());
+    document.getElementById("stat-flags").textContent = data.filter(t => t.discrepancyFlag).length;
+
+    if (!data.length) {
+      document.getElementById("ts-body").innerHTML =
+        `<tr><td colspan="4" class="empty">No timesheet records.</td></tr>`;
+      return;
+    }
+
+    document.getElementById("ts-body").innerHTML = data.map(t => `
+      <tr>
+        <td style="font-weight:500">${t.staff}</td>
+        <td class="mono">${t.incident}</td>
+        <td class="mono">${t.hoursLogged}h</td>
+        <td><span class="badge ${t.discrepancyFlag ? "b-flag" : "b-ok"}">${t.discrepancyFlag ? "Flagged" : "OK"}</span></td>
+      </tr>`).join("");
+  }
+
+  async function logTimesheet() {
+    const staffId    = document.getElementById("ts-staff").value;
+    const incidentId = document.getElementById("ts-incident").value;
+    const hours      = parseFloat(document.getElementById("ts-hours").value);
+
+    if (!staffId || !incidentId || isNaN(hours)) {
+      toast("Please fill in all timesheet fields.");
+      return;
+    }
+
+    const data = await fetch(`${API}/timesheets`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ staffId, incidentId, hoursLogged: hours })
+    }).then(r => r.json());
+
+    toast(`Logged ${data.hoursLogged}h. ${data.discrepancyFlag ? "Flagged — exceeds 12h limit." : "No issues."}`);
+    loadTimesheets();
+  }
+
+  // load on startup
+  loadStaff();
+  loadIncidents();
+  loadTimesheets();
+</script>
+</body>
+</html>
