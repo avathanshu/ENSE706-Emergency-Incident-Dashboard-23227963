@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "XU56uiotC1s=",
+  "success": true,
+  "projectFilePath": "/Users/avathanshubhat/Documents/AUT/Y3S1/DPSM/DEV/ENSE706-Emergency-Incident-Dashboard-23227963/EIRS/EIRS.csproj",
+  "expectedPackageFiles": [
+    "/Users/avathanshubhat/.nuget/packages/microsoft.aspnetcore.openapi/10.0.6/microsoft.aspnetcore.openapi.10.0.6.nupkg.sha512",
+    "/Users/avathanshubhat/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
