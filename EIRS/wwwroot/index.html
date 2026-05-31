@@ -3,147 +3,136 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EIRS — Emergency Incident Roster System</title>
+  <title>EIRS — Emergency Incident Response</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --sidebar-w: 240px;
-      --dark:      #111827;
-      --dark-mid:  #1f2937;
-      --accent:    #3b82f6;
-      --accent-hover: #2563eb;
-      --text:      #111827;
-      --muted:     #6b7280;
-      --border:    #e5e7eb;
-      --bg:        #f8fafc;
-      --card:      #ffffff;
-      --mono:      'JetBrains Mono', monospace;
+      
+      /* High Contrast Minimalist Palette */
+      --bg-body:     #f4f4f5; /* Zinc 100 */
+      --bg-surface:  #ffffff; /* Pure White */
+      --bg-hover:    #fafafa; /* Very light grey */
+      --border:      #e4e4e7; /* Zinc 200 */
+      --border-dark: #d4d4d8; /* Zinc 300 */
+      
+      /* Typography */
+      --text-main:   #09090b; /* Zinc 950 - True Black */
+      --text-muted:  #52525b; /* Zinc 600 - Dark Grey */
+      --text-faint:  #a1a1aa; /* Zinc 400 - Light Grey */
+      
+      /* Functional Accents */
+      --accent:      #18181b; /* Zinc 900 */
+      --green:       #16a34a; /* Green 600 */
+      --red:         #dc2626; /* Red 600 */
+      --amber:       #d97706; /* Amber 600 */
+      
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
     }
+
+    html { font-size: 14px; }
 
     body {
-      font-family: 'Inter', sans-serif;
-      font-size: 13.5px;
-      background: linear-gradient(140deg, #eef2ff 0%, #f9fafb 55%, #f0fdf4 100%);
-      background-attachment: fixed;
-      color: var(--text);
+      font-family: var(--sans);
+      background: var(--bg-body);
+      color: var(--text-main);
       display: flex;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Sidebar ── */
+    /* Layout & Sidebar */
     aside {
       width: var(--sidebar-w);
       min-height: 100vh;
-      background: var(--dark);
-      color: #f9fafb;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       position: fixed;
       top: 0; left: 0;
-      z-index: 100;
+      z-index: 200;
     }
 
-    .sidebar-brand {
-      padding: 24px 18px 16px;
-      border-bottom: 1px solid #374151;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .brand {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
     }
-    
-    .brand-title {
-      font-size: 12.5px;
+
+    .brand-logo {
+      font-family: var(--mono);
+      font-size: 16px;
       font-weight: 600;
-      letter-spacing: 0.05em;
-      line-height: 1.3;
-      color: #f9fafb;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
     }
 
-    .brand-sub {
-      font-size: 10.5px;
-      color: #9ca3af;
-      margin-top: 2px;
-      line-height: 1.3;
+    .brand-org {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
 
-    .sidebar-nav {
-      padding: 14px 0;
-      flex: 1;
-    }
+    .nav-section { padding: 24px 0; }
 
     .nav-label {
+      font-family: var(--mono);
       font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #6b7280;
-      padding: 10px 18px 5px;
+      color: var(--text-faint);
+      padding: 0 24px 12px;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 9px;
-      padding: 9px 18px;
-      font-size: 13px;
-      color: #d1d5db;
+      justify-content: space-between;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
       cursor: pointer;
-      border-left: 3px solid transparent;
-      transition: background 0.12s;
-      user-select: none;
+      transition: all 0.15s ease;
+      border-right: 3px solid transparent;
     }
 
-    .nav-item:hover, .nav-item.active {
-      background: #1f2937;
-      color: #fff;
-      border-left-color: var(--accent);
-    }
+    .nav-item:hover { background: var(--bg-hover); color: var(--text-main); }
+    .nav-item.active { color: var(--text-main); font-weight: 600; border-right-color: var(--text-main); background: var(--bg-hover); }
 
-    .nav-item.dim { opacity: 0.4; cursor: default; }
-
-    .nav-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
+    .nav-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
     }
+    .nav-item.active .nav-badge { color: var(--text-main); }
 
     .sidebar-footer {
-      padding: 14px 18px;
-      border-top: 1px solid #374151;
-    }
-
-    .footer-label { font-size: 10.5px; color: #6b7280; }
-
-    .footer-user {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 7px;
+      justify-content: space-between;
     }
 
-    .footer-user .online-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: #22c55e;
-      flex-shrink: 0;
-    }
+    .session-info { display: flex; flex-direction: column; gap: 2px; }
+    .session-name { font-size: 13px; font-weight: 600; }
+    .session-role { font-size: 12px; color: var(--text-muted); }
+    
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .status-dot.green { background: var(--green); }
+    .status-dot.red { background: var(--red); }
+    .status-dot.amber { background: var(--amber); }
+    .status-dot.grey { background: var(--border-dark); }
 
-    .footer-user .uname {
-      font-size: 13px;
-      font-weight: 500;
-      color: #f9fafb;
-    }
-
-    .footer-user .urole {
-      font-size: 11px;
-      color: #6b7280;
-    }
-
-    /* ── Main ── */
+    /* Main Area */
     .main-wrap {
       margin-left: var(--sidebar-w);
       flex: 1;
@@ -152,497 +141,919 @@
     }
 
     .topbar {
-      background: rgba(255,255,255,0.82);
-      backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      padding: 11px 28px;
+      padding: 16px 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky; top: 0;
-      z-index: 50;
+      z-index: 100;
     }
 
-    .topbar-title { font-size: 13.5px; font-weight: 600; }
-    .topbar-clock { font-size: 12px; color: var(--muted); font-family: var(--mono); }
-
-    .content {
-      padding: 22px 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    .breadcrumb {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
     }
+    .breadcrumb strong { color: var(--text-main); font-weight: 500; }
 
-    /* ── Stats ── */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
+    .topbar-right { display: flex; align-items: center; gap: 24px; }
+    .topbar-clock { font-family: var(--mono); font-size: 13px; color: var(--text-main); }
+
+    .alert-btn {
+      background: none; border: none; cursor: pointer;
+      font-family: var(--sans); font-size: 13px; font-weight: 500;
+      color: var(--text-muted); display: flex; align-items: center; gap: 8px;
     }
+    .alert-btn:hover { color: var(--text-main); }
+
+    /* Content & Cards */
+    .content { padding: 32px; display: flex; flex-direction: column; gap: 32px; flex: 1; max-width: 1400px; }
+
+    .page-section { display: none; flex-direction: column; gap: 32px; }
+    .page-section.active { display: flex; }
+
+    .section-hdr { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .section-hdr h1 { font-size: 22px; font-weight: 600; color: var(--text-main); letter-spacing: -0.02em; }
+    .section-hdr p { font-size: 14px; color: var(--text-muted); margin-top: 6px; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
     .stat-card {
-      background: var(--card);
+      background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 15px 17px;
+      padding: 20px;
     }
+    .stat-label { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 12px; }
+    .stat-value { font-family: var(--mono); font-size: 32px; font-weight: 400; color: var(--text-main); line-height: 1; }
+    .stat-value.amber { color: var(--amber); }
+    .stat-value.red   { color: var(--red); }
+    .stat-value.green { color: var(--green); }
 
-    .stat-label {
-      font-size: 10.5px;
-      font-weight: 600;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
 
-    .stat-value {
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--text);
-      margin-top: 5px;
-      font-family: var(--mono);
-      line-height: 1;
-    }
+    .card { background: var(--bg-surface); border: 1px solid var(--border); }
+    .card-hdr { padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .card-title { font-size: 14px; font-weight: 600; color: var(--text-main); }
+    .card-body { padding: 20px; }
 
-    .stat-sub {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    /* ── Two col ── */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-
-    /* ── Card ── */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      overflow: hidden;
-    }
-
-    .card-header {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #fafafa;
-    }
-
-    .card-header h2 {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .card-body { padding: 15px 16px; }
-
-    /* ── Toolbar ── */
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .toolbar label {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    select, input[type="number"] {
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 5px 9px;
-      font-size: 13px;
-      font-family: 'Inter', sans-serif;
-      background: #fff;
-      color: var(--text);
+    /* Forms & Buttons */
+    select, input[type="number"], input[type="text"] {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dark);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-family: var(--sans);
+      color: var(--text-main);
       outline: none;
+      transition: border-color 0.2s;
     }
+    select:focus, input:focus { border-color: var(--text-main); }
 
-    select:focus, input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(59,130,246,0.12);
-    }
-
-    /* ── Buttons ── */
     .btn {
-      border-radius: 5px;
-      padding: 5px 13px;
-      font-size: 12.5px;
-      font-weight: 500;
-      font-family: 'Inter', sans-serif;
-      cursor: pointer;
-      transition: background 0.12s;
+      padding: 8px 16px;
+      font-size: 13px; font-weight: 500;
+      font-family: var(--sans); cursor: pointer;
+      transition: all 0.15s; border: 1px solid transparent;
+      white-space: nowrap;
     }
+    .btn-dark { background: var(--accent); color: var(--bg-surface); border-color: var(--accent); }
+    .btn-dark:hover { background: var(--text-main); }
+    
+    .btn-outline { background: transparent; color: var(--text-main); border-color: var(--border-dark); }
+    .btn-outline:hover { border-color: var(--text-main); }
 
-    .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
-    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-text { background: transparent; color: var(--text-muted); padding: 4px 8px; font-size: 13px; }
+    .btn-text:hover { color: var(--text-main); }
 
-    .btn-ghost { background: #fff; color: var(--muted); border: 1px solid var(--border); }
-    .btn-ghost:hover { background: #f9fafb; color: var(--text); }
-
-    .btn-resolve { background: #fff; color: #dc2626; border: 1px solid #fca5a5; font-size: 12px; padding: 4px 10px; }
-    .btn-resolve:hover { background: #fef2f2; }
-
-    /* ── Tables ── */
+    /* Tables */
     table { width: 100%; border-collapse: collapse; }
-    thead tr { border-bottom: 1px solid var(--border); }
-
-    th {
-      padding: 7px 11px;
-      text-align: left;
-      font-size: 10.5px;
-      font-weight: 600;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    td {
-      padding: 9px 11px;
-      border-bottom: 1px solid #f3f4f6;
-      font-size: 13px;
-    }
-
+    th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 500; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+    td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
-    tbody tr:hover td { background: #f9fafb; }
+    .mono-cell { font-family: var(--mono); font-size: 13px; color: var(--text-muted); }
 
-    .mono { font-family: var(--mono); font-size: 12px; }
+    /* Lists & Modules */
+    .empty { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
 
-    /* ── Badges ── */
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
+    .log-list, .notif-list { display: flex; flex-direction: column; max-height: 400px; overflow-y: auto; }
+    .log-entry, .notif-entry {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
     }
+    .log-entry:last-child, .notif-entry:last-child { border-bottom: none; }
+    
+    .log-ts { font-family: var(--mono); font-size: 12px; color: var(--text-muted); min-width: 80px; }
+    .log-actor { font-weight: 500; min-width: 100px; }
+    .log-action { color: var(--text-muted); flex: 1; }
+    .log-target { font-family: var(--mono); font-size: 12px; text-align: right; }
 
-    .b-open     { background: #fef9c3; color: #854d0e; }
-    .b-resolved { background: #dcfce7; color: #166534; }
-    .b-avail    { background: #dcfce7; color: #166534; }
-    .b-busy     { background: #fee2e2; color: #991b1b; }
-    .b-flag     { background: #fee2e2; color: #991b1b; }
-    .b-ok       { background: #f3f4f6; color: #6b7280; }
-    .b-low      { background: #dbeafe; color: #1e40af; }
-    .b-high     { background: #fef3c7; color: #92400e; }
-    .b-critical { background: #fee2e2; color: #991b1b; }
+    .notif-entry { cursor: pointer; transition: background 0.1s; }
+    .notif-entry:hover { background: var(--bg-hover); }
+    .notif-entry.unread { background: #fafafa; }
+    .notif-body { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .notif-header { display: flex; justify-content: space-between; font-size: 13px; }
+    .notif-recipient { font-weight: 600; color: var(--text-main); }
+    .notif-time { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+    .notif-msg { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
 
-    .empty { padding: 26px 11px; text-align: center; color: #9ca3af; font-size: 13px; }
+    .entity-card { display: flex; flex-direction: column; gap: 12px; padding: 20px; border: 1px solid var(--border); background: var(--bg-surface); }
+    .entity-hdr { display: flex; justify-content: space-between; align-items: flex-start; }
+    .entity-name { font-size: 15px; font-weight: 600; }
+    .entity-sub { font-family: var(--mono); font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .entity-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
+    .entity-label { color: var(--text-muted); }
+    .entity-val { font-weight: 500; text-align: right; }
+    .entity-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .tag { font-family: var(--mono); font-size: 11px; padding: 2px 6px; background: var(--bg-body); border: 1px solid var(--border); color: var(--text-muted); }
 
-    .divider { height: 1px; background: var(--border); margin: 12px 0; }
+    /* Modals */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(9, 9, 11, 0.4); z-index: 500; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--bg-surface); border: 1px solid var(--border); width: 480px; max-width: 90vw; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .modal-hdr { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-size: 16px; font-weight: 600; }
+    .modal-close { cursor: pointer; color: var(--text-muted); font-size: 20px; line-height: 1; border: none; background: none; }
+    .modal-close:hover { color: var(--text-main); }
+    .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+    .form-field { display: flex; flex-direction: column; gap: 8px; }
+    .form-label { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+    .form-field select, .form-field input { width: 100%; }
+    .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; background: var(--bg-hover); }
 
-    /* ── Toast ── */
     #toast {
-      position: fixed;
-      bottom: 22px; right: 22px;
-      background: #111827;
-      color: #f9fafb;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-size: 13px;
-      display: none;
-      z-index: 999;
-      max-width: 320px;
-      line-height: 1.5;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+      position: fixed; bottom: 32px; right: 32px;
+      background: var(--text-main); color: var(--bg-surface);
+      padding: 16px 24px; font-size: 14px; font-weight: 500;
+      display: none; z-index: 999; max-width: 400px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-dark); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
   </style>
 </head>
 <body>
 
 <aside>
-  <div class="sidebar-brand">
-    <div class="brand-text">
-      <div class="brand-title">Emergency Incident<br>Response System</div>
-      <div class="brand-sub">Spectrum Care NZ</div>
-    </div>
+  <div class="brand">
+    <div class="brand-logo">EIRS Framework</div>
+    <div class="brand-org">Spectrum Care NZ</div>
   </div>
 
-  <nav class="sidebar-nav">
-    <div class="nav-label">Active</div>
-    <div class="nav-item active" onclick="navClick(this, 'section-incidents')">
-      <span class="nav-dot"></span> Incidents
+  <nav class="nav-section">
+    <div class="nav-label">Operations</div>
+    <div class="nav-item active" data-page="incidents" onclick="navTo(this)">
+      Incidents <span class="nav-badge" id="badge-incidents">0</span>
     </div>
-    <div class="nav-item" onclick="navClick(this, 'section-staff')">
-      <span class="nav-dot"></span> Staff
+    <div class="nav-item" data-page="staff" onclick="navTo(this)">
+      Staff Roster <span class="nav-badge" id="badge-staff">0</span>
     </div>
-    <div class="nav-item" onclick="navClick(this, 'section-timesheets')">
-      <span class="nav-dot"></span> Timesheets
+    <div class="nav-item" data-page="timesheets" onclick="navTo(this)">
+      Timesheets <span class="nav-badge" id="badge-ts">0</span>
     </div>
-
-    <div class="nav-label" style="margin-top:10px;">Planned</div>
-    <div class="nav-item dim"><span class="nav-dot"></span> Shift Schedule</div>
-    <div class="nav-item dim"><span class="nav-dot"></span> Reports</div>
-    <div class="nav-item dim"><span class="nav-dot"></span> Access Control</div>
+    
+    <div class="nav-label" style="margin-top: 24px;">System</div>
+    <div class="nav-item" data-page="notifications" onclick="navTo(this)">
+      Messages <span class="nav-badge" id="badge-notif">0</span>
+    </div>
+    <div class="nav-item" data-page="audit" onclick="navTo(this)">
+      Audit Log
+    </div>
+    <div class="nav-item" data-page="residents" onclick="navTo(this)">
+      Resident Profiles
+    </div>
   </nav>
 
   <div class="sidebar-footer">
-    <div class="footer-label">Signed in as</div>
-    <div class="footer-user">
-      <div class="online-dot"></div>
-      <span class="uname">Leia</span>
-      <span class="urole">Incident Manager</span>
+    <div class="session-info">
+      <span class="session-name">Leia M.</span>
+      <span class="session-role">Incident Manager</span>
     </div>
+    <div class="status-dot green"></div>
   </div>
 </aside>
 
 <div class="main-wrap">
   <div class="topbar">
-    <div class="topbar-title">Dashboard</div>
-    <div class="topbar-clock" id="clock">--:--:--</div>
+    <div class="breadcrumb">
+      System / <strong id="topbar-page">Incidents</strong>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-clock" id="clock">--:--</div>
+      <button class="alert-btn" onclick="navTo(document.querySelector('[data-page=notifications]'))">
+        <div class="status-dot grey" id="notif-dot"></div> Alerts
+      </button>
+    </div>
   </div>
 
   <div class="content">
 
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-label">Total Incidents</div>
-        <div class="stat-value" id="stat-total">0</div>
-        <div class="stat-sub">logged this session</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Open</div>
-        <div class="stat-value" id="stat-open">0</div>
-        <div class="stat-sub">awaiting resolution</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Staff Available</div>
-        <div class="stat-value" id="stat-avail">—</div>
-        <div class="stat-sub">of 3 support workers</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Flagged Hours</div>
-        <div class="stat-value" id="stat-flags">0</div>
-        <div class="stat-sub">exceed 12h threshold</div>
-      </div>
-    </div>
-
-    <div class="two-col">
-
-      <div class="card" id="section-incidents">
-        <div class="card-header">
-          <h2>Incidents</h2>
-          <button class="btn btn-ghost" onclick="loadIncidents()">Refresh</button>
+    <!-- INCIDENTS -->
+    <div class="page-section active" id="page-incidents">
+      <div class="section-hdr">
+        <div>
+          <h1>Incident Management</h1>
+          <p>Allocate and track emergency events</p>
         </div>
-        <div class="card-body">
-          <div class="toolbar">
-            <label>Severity</label>
-            <select id="severity">
-              <option>Low</option>
-              <option selected>High</option>
-              <option>Critical</option>
-            </select>
-            <button class="btn btn-primary" onclick="createIncident()">Log Incident</button>
-          </div>
+        <button class="btn btn-dark" onclick="openNewIncidentModal()">Log Incident</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Logged</div>
+          <div class="stat-value" id="sv-total">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Incidents</div>
+          <div class="stat-value amber" id="sv-open">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Available Staff</div>
+          <div class="stat-value green" id="sv-avail">3</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Flagged Records</div>
+          <div class="stat-value" id="sv-flags">0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Incident Register</span>
+        </div>
+        <div class="card-body" style="padding: 0;">
           <table>
             <thead>
-              <tr><th>ID</th><th>Severity</th><th>Status</th><th>Assigned To</th><th>Time</th><th></th></tr>
+              <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Severity</th>
+                <th>Status</th>
+                <th>Assigned To</th>
+                <th>Resident</th>
+                <th>Time</th>
+                <th>Action</th>
+              </tr>
             </thead>
             <tbody id="incident-body">
-              <tr><td colspan="6" class="empty">No incidents logged.</td></tr>
+              <tr><td colspan="8" class="empty">No incidents logged.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
+    </div>
 
-      <div class="card" id="section-staff">
-        <div class="card-header">
-          <h2>Staff Availability</h2>
-          <button class="btn btn-ghost" onclick="loadStaff()">Refresh</button>
+    <!-- STAFF -->
+    <div class="page-section" id="page-staff">
+      <div class="section-hdr">
+        <div>
+          <h1>Staff Roster</h1>
+          <p>Current availability and assignment</p>
         </div>
-        <div class="card-body">
+        <button class="btn btn-outline" onclick="renderStaff()">Refresh</button>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Management & Admin</span>
+        </div>
+        <div class="card-body" style="padding: 0;">
           <table>
             <thead>
-              <tr><th>ID</th><th>Name</th><th>Status</th><th>Hours</th><th>Homes</th></tr>
+              <tr><th>ID</th><th>Name</th><th>Role</th><th>Status</th><th>Logged Hours</th></tr>
             </thead>
-            <tbody id="staff-body">
-              <tr><td colspan="5" class="empty">Loading...</td></tr>
-            </tbody>
+            <tbody id="managers-body"></tbody>
           </table>
         </div>
       </div>
 
-    </div>
-
-    <div class="card" id="section-timesheets">
-      <div class="card-header">
-        <h2>Timesheets</h2>
-        <button class="btn btn-ghost" onclick="loadTimesheets()">Refresh</button>
-      </div>
-      <div class="card-body">
-        <div class="toolbar">
-          <label>Staff</label>
-          <select id="ts-staff"></select>
-          <label>Incident</label>
-          <select id="ts-incident"></select>
-          <label>Hours</label>
-          <input type="number" id="ts-hours" min="0" max="24" step="0.5" value="8" style="width:74px;"/>
-          <button class="btn btn-primary" onclick="logTimesheet()">Log Hours</button>
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Support Workers</span>
         </div>
-        <div class="divider"></div>
-        <table>
-          <thead>
-            <tr><th>Staff</th><th>Incident</th><th>Hours</th><th>Status</th></tr>
-          </thead>
-          <tbody id="ts-body">
-            <tr><td colspan="4" class="empty">No timesheet records.</td></tr>
-          </tbody>
-        </table>
+        <div class="card-body">
+          <div id="staff-cards" class="grid-3"></div>
+        </div>
       </div>
     </div>
 
+    <!-- TIMESHEETS -->
+    <div class="page-section" id="page-timesheets">
+      <div class="section-hdr">
+        <div>
+          <h1>Timesheets</h1>
+          <p>Review logged hours and discrepancies</p>
+        </div>
+        <button class="btn btn-dark" onclick="openTimesheetModal()">Log Hours</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Submissions</div>
+          <div class="stat-value" id="ts-stat-total">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Discrepancies</div>
+          <div class="stat-value red" id="ts-stat-flagged">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Hours</div>
+          <div class="stat-value" id="ts-stat-hours">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Review</div>
+          <div class="stat-value" id="ts-stat-hr">0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">Recent Submissions</span></div>
+        <div class="card-body" style="padding: 0;">
+          <table>
+            <thead>
+              <tr><th>Staff</th><th>Incident ID</th><th>Hours</th><th>Status</th><th>Time Logged</th></tr>
+            </thead>
+            <tbody id="ts-body">
+              <tr><td colspan="5" class="empty">No records submitted.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="page-section" id="page-notifications">
+      <div class="section-hdr">
+        <div>
+          <h1>System Messages</h1>
+          <p>Dispatch and review communications</p>
+        </div>
+        <button class="btn btn-outline" onclick="openBroadcastModal()">Broadcast Message</button>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-hdr">
+            <span class="card-title">Message History</span>
+            <button class="btn-text" onclick="markAllRead()">Mark All Read</button>
+          </div>
+          <div class="card-body" style="padding:0">
+            <div class="notif-list" id="notif-list">
+              <div class="empty">No messages found.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="align-self: start;">
+          <div class="card-hdr"><span class="card-title">Direct Message</span></div>
+          <div class="card-body">
+            <div class="form-field" style="margin-bottom:16px;">
+              <label class="form-label">Recipient</label>
+              <select id="notif-recipient-sel"></select>
+            </div>
+            <div class="form-field" style="margin-bottom:16px;">
+              <label class="form-label">Channel</label>
+              <select id="notif-channel-sel">
+                <option value="InApp">Internal System</option>
+                <option value="SMS">SMS</option>
+                <option value="Email">Email</option>
+              </select>
+            </div>
+            <div class="form-field" style="margin-bottom:24px;">
+              <label class="form-label">Content</label>
+              <input type="text" id="notif-msg-input" placeholder="Type message..."/>
+            </div>
+            <button class="btn btn-dark" onclick="sendDirectNotification()" style="width:100%;">Dispatch Message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIT LOG -->
+    <div class="page-section" id="page-audit">
+      <div class="section-hdr">
+        <div>
+          <h1>Audit Log</h1>
+          <p>Immutable record of system events</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Event Stream</span>
+          <span class="mono-cell" id="audit-count" style="font-size: 12px;">0 events</span>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div style="display:flex; gap:16px; padding:12px 20px; border-bottom:1px solid var(--border); background:var(--bg-hover);">
+            <span class="form-label" style="min-width: 80px;">Time</span>
+            <span class="form-label" style="min-width: 100px;">Actor</span>
+            <span class="form-label" style="flex: 1;">Action</span>
+            <span class="form-label" style="text-align: right;">Target Reference</span>
+          </div>
+          <div class="log-list" id="audit-list">
+            <div class="empty">No events recorded.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESIDENTS -->
+    <div class="page-section" id="page-residents">
+      <div class="section-hdr">
+        <div>
+          <h1>Resident Profiles</h1>
+          <p>Clinical summaries and directives</p>
+        </div>
+      </div>
+      <div id="resident-grid" class="grid-3"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-incident">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title">Log Incident</span>
+      <button class="modal-close" onclick="closeModal('modal-incident')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label class="form-label">Classification</label>
+        <select id="f-type">
+          <option value="Medical">Medical Emergency</option>
+          <option value="Behavioural">Behavioural Incident</option>
+          <option value="StaffingShortage">Staffing Shortage</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Severity Level</label>
+        <select id="f-severity">
+          <option value="Low">Low</option>
+          <option value="High" selected>High</option>
+          <option value="Critical">Critical</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Subject (Resident)</label>
+        <select id="f-resident"></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-incident')">Cancel</button>
+      <button class="btn btn-dark" onclick="createIncident()">Submit Incident</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-timesheet">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title">Log Timesheet</span>
+      <button class="modal-close" onclick="closeModal('modal-timesheet')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label class="form-label">Personnel</label>
+        <select id="ts-staff-sel"></select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Reference Incident</label>
+        <select id="ts-incident-sel"></select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Duration (Hours)</label>
+        <input type="number" id="ts-hours-input" min="0" max="24" step="0.5" value="8" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-timesheet')">Cancel</button>
+      <button class="btn btn-dark" onclick="submitTimesheet()">Save Record</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-broadcast">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title">Broadcast Message</span>
+      <button class="modal-close" onclick="closeModal('modal-broadcast')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label class="form-label">Content</label>
+        <input type="text" id="bc-msg" placeholder="Type broadcast message..." />
+      </div>
+      <div class="form-field">
+        <label class="form-label">Delivery Channel</label>
+        <select id="bc-channel">
+          <option value="InApp">Internal System</option>
+          <option value="SMS">SMS</option>
+          <option value="Email">Email</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-broadcast')">Cancel</button>
+      <button class="btn btn-dark" onclick="sendBroadcast()">Dispatch</button>
+    </div>
   </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-  const API = "http://localhost:5000";
+// Logic core mirrors previous implementation, stripped of external fluff.
 
-  // clock
-  setInterval(() => {
-    document.getElementById("clock").textContent = new Date().toLocaleTimeString();
-  }, 1000);
+const NotificationService = (() => {
+  let _notifications = [], _counter = 1;
+  return {
+    send(recipientId, message, channel = 'InApp') {
+      const n = { id: `MSG-${_counter++}`, recipientId, message, channel, sentAt: new Date(), acknowledged: false };
+      _notifications.push(n);
+      return n;
+    },
+    broadcast(recipientIds, message, channel = 'InApp') { recipientIds.forEach(id => this.send(id, message, channel)); },
+    getAll() { return [..._notifications]; }
+  };
+})();
 
-  function navClick(el, targetId) {
-    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-    el.classList.add("active");
-    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+const AuditLogService = (() => {
+  let _entries = [];
+  return {
+    log(actorId, action, targetId) { _entries.push({ timestamp: new Date(), actorId, action, targetId }); },
+    getAll() { return [..._entries]; }
+  };
+})();
+
+let _incCounter = 1;
+const IncidentFactory = {
+  create(type, severity) {
+    const prefix = type === 'Medical' ? 'MED' : type === 'Behavioural' ? 'BEH' : 'STF';
+    const id = `INC-${prefix}-${String(_incCounter++).padStart(3,'0')}`;
+    const inc = { id, severity, status: 'Active', type, timestamp: new Date(), worker: null, residentId: null };
+    
+    // Updated log message
+    AuditLogService.log('System', `Created ${type} Incident`, id);
+    
+    return inc;
+  }
+};
+
+const managers = [
+  { id: 'MGR-001', name: 'Leia M.',  role: 'Incident Manager', available: true, hours: 0 },
+  { id: 'MGR-002', name: 'Han S.', role: 'HR Manager',       available: true, hours: 0 },
+  { id: 'MGR-003', name: 'Luke S.', role: 'IT Admin',         available: true, hours: 0 }
+];
+
+const supportWorkers = [
+  { id: 'SW-001', name: 'Spock',   available: true, hours: 0, loc: ['Elm House', 'Birch'], ch: 'SMS' },
+  { id: 'SW-002', name: 'James T. K.', available: true, hours: 0, loc: ['Cedar Grove'],        ch: 'Email' },
+  { id: 'SW-003', name: 'Bones', available: true, hours: 0, loc: ['Elm House', 'Maple'], ch: 'InApp' }
+];
+
+const residents = [
+  { id: 'RES-001', name: 'Sarah Connor', meds: 'Metformin, Amlodipine', allergies: 'Penicillin', acd: 'DNR Active', flags: ['Fall Risk', 'Dementia'] },
+  { id: 'RES-002', name: 'Friederich N.',   meds: 'Warfarin', allergies: 'Sulfa, Latex', acd: 'Full Resus', flags: ['Diabetes T2'] },
+  { id: 'RES-003', name: 'Thulsa D.',   meds: 'Risperidone, Paracetamol PRN', allergies: 'None', acd: 'Comfort Care', flags: ['Epilepsy'] }
+];
+
+let incidents = [], timesheets = [];
+const CURRENT_USER = managers[0];
+
+setInterval(() => {
+  const d = new Date();
+  document.getElementById('clock').textContent = d.toLocaleTimeString('en-NZ', { hour: '2-digit', minute: '2-digit' });
+}, 1000);
+
+function navTo(el) {
+  if (typeof el === 'string') el = document.querySelector(`[data-page="${el}"]`);
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  const page = el.dataset.page;
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  
+  const textContent = el.childNodes[0].nodeValue || el.textContent;
+  document.getElementById('topbar-page').textContent = textContent.trim();
+  
+  if (page === 'notifications') renderNotifications();
+  if (page === 'audit') renderAuditLog();
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function openNewIncidentModal() {
+  document.getElementById('f-resident').innerHTML = residents.map(r => `<option value="${r.id}">${r.name} (${r.id})</option>`).join('');
+  openModal('modal-incident');
+}
+
+function openTimesheetModal() {
+  const sSel = document.getElementById('ts-staff-sel');
+  sSel.innerHTML = [...managers, ...supportWorkers].map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+  const iSel = document.getElementById('ts-incident-sel');
+  if (!incidents.length) { toast('No incidents available for logging.'); return; }
+  iSel.innerHTML = incidents.map(i => `<option value="${i.id}">${i.id}</option>`).join('');
+  openModal('modal-timesheet');
+}
+
+function openBroadcastModal() { openModal('modal-broadcast'); }
+function createIncident() {
+  const type = document.getElementById('f-type').value;
+  const severity = document.getElementById('f-severity').value;
+  const resId = document.getElementById('f-resident').value;
+  
+  const incident = IncidentFactory.create(type, severity);
+  incident.residentId = resId;
+
+  const worker = supportWorkers.find(w => w.available);
+  if (worker) {
+    worker.available = false;
+    incident.worker = worker.id;
+    NotificationService.send(worker.id, `Assigned to ${incident.id} (${severity}).`, worker.ch);
+    
+    // Updated log message
+    AuditLogService.log(CURRENT_USER.id, 'Assigned Worker to Incident', incident.id);
+    
+    toast(`Incident ${incident.id} created and assigned to ${worker.name}.`);
+  } else {
+    toast(`Incident ${incident.id} created. No staff available for assignment.`);
   }
 
-  function toast(msg) {
-    const el = document.getElementById("toast");
-    el.textContent = msg;
-    el.style.display = "block";
-    clearTimeout(el._t);
-    el._t = setTimeout(() => el.style.display = "none", 4000);
+  incidents.push(incident);
+  closeModal('modal-incident');
+  renderIncidents();
+  renderStaff();
+  updateBadges();
+}
+
+function resolveIncident(id) {
+  const inc = incidents.find(i => i.id === id);
+  if (!inc) return;
+  inc.status = 'Resolved';
+  if (inc.worker) {
+    const w = supportWorkers.find(w => w.id === inc.worker);
+    if (w) w.available = true;
+  }
+  
+  // Updated log message
+  AuditLogService.log(CURRENT_USER.id, 'Marked Incident as Resolved', id);
+  
+  renderIncidents(); renderStaff(); updateBadges();
+  toast(`Incident ${id} marked as resolved.`);
+}
+
+function renderIncidents() {
+  document.getElementById('sv-total').textContent = incidents.length;
+  const activeCount = incidents.filter(i => i.status === 'Active').length;
+  document.getElementById('sv-open').textContent = activeCount;
+
+  const tbody = document.getElementById('incident-body');
+  if (!incidents.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty">No incidents logged.</td></tr>';
+    return;
   }
 
-  function sevBadge(s) {
-    const cls = { low: "b-low", high: "b-high", critical: "b-critical" };
-    return `<span class="badge ${cls[(s||"").toLowerCase()] || ""}">${s}</span>`;
+  tbody.innerHTML = incidents.slice().reverse().map(i => {
+    const w = supportWorkers.find(sw => sw.id === i.worker);
+    const res = residents.find(r => r.id === i.residentId);
+    const time = i.timestamp.toLocaleTimeString('en-NZ', {hour:'2-digit',minute:'2-digit'});
+    
+    let statusHTML = i.status === 'Active' 
+      ? `<div style="display:flex;align-items:center;"><div class="status-dot amber" style="margin-right:8px;"></div> Active</div>`
+      : `<div style="display:flex;align-items:center;"><div class="status-dot green" style="margin-right:8px;"></div> Resolved</div>`;
+
+    return `<tr>
+      <td class="mono-cell">${i.id}</td>
+      <td>${i.type}</td>
+      <td>${i.severity}</td>
+      <td>${statusHTML}</td>
+      <td>${w ? w.name : '—'}</td>
+      <td style="color:var(--text-muted);">${res ? res.name : '—'}</td>
+      <td class="mono-cell">${time}</td>
+      <td>${i.status === 'Active' ? `<button class="btn-text" style="color:var(--text-main);padding:0;" onclick="resolveIncident('${i.id}')">Resolve</button>` : '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderStaff() {
+  const avail = supportWorkers.filter(w => w.available).length;
+  document.getElementById('sv-avail').textContent = avail;
+
+  document.getElementById('managers-body').innerHTML = managers.map(m =>
+    `<tr>
+      <td class="mono-cell">${m.id}</td>
+      <td style="font-weight:500;">${m.name}</td>
+      <td style="color:var(--text-muted);">${m.role}</td>
+      <td>Available</td>
+      <td class="mono-cell">${m.hours}h</td>
+    </tr>`
+  ).join('');
+
+  document.getElementById('staff-cards').innerHTML = supportWorkers.map(w => {
+    const statusColor = w.available ? 'green' : 'amber';
+    const statusText = w.available ? 'Available' : 'Assigned';
+    return `<div class="entity-card">
+      <div class="entity-hdr">
+        <div>
+          <div class="entity-name">${w.name}</div>
+          <div class="entity-sub">${w.id}</div>
+        </div>
+        <div style="display:flex;align-items:center;font-size:12px;font-weight:500;">
+           <div class="status-dot ${statusColor}" style="margin-right:6px;"></div> ${statusText}
+        </div>
+      </div>
+      <div class="entity-row"><span class="entity-label">Logged Hours</span><span class="entity-val mono-cell">${w.hours}h</span></div>
+      <div class="entity-row"><span class="entity-label">Locations</span><span class="entity-val" style="color:var(--text-muted)">${w.loc.join(', ')}</span></div>
+      <div class="entity-row"><span class="entity-label">Contact Pref</span><span class="entity-val mono-cell">${w.ch}</span></div>
+    </div>`;
+  }).join('');
+}
+function submitTimesheet() {
+  const staffId = document.getElementById('ts-staff-sel').value;
+  const incidentId = document.getElementById('ts-incident-sel').value;
+  const hours = parseFloat(document.getElementById('ts-hours-input').value);
+  if (!staffId || !incidentId || isNaN(hours)) return;
+
+  const flagged = hours > 12;
+  const staff = [...managers, ...supportWorkers].find(s => s.id === staffId);
+  if (staff) staff.hours = +(staff.hours + hours).toFixed(1);
+
+  timesheets.push({ staff: staff ? staff.name : staffId, incidentId, hours, flagged, time: new Date() });
+  
+  // Updated log message
+  AuditLogService.log(staffId, 'Logged Timesheet Hours', incidentId);
+  
+  if (flagged) {
+    // Updated log message
+    AuditLogService.log('System', 'Flagged Timesheet Discrepancy', `${staffId} on ${incidentId}`);
+    toast(`Alert: ${hours}h logged exceeds threshold. Record flagged.`);
+  } else {
+    toast(`Recorded ${hours}h for ${staff.name}.`);
   }
 
-  async function loadStaff() {
-    const data = await fetch(`${API}/staff`).then(r => r.json());
-    document.getElementById("stat-avail").textContent = data.filter(s => s.isAvailable).length;
+  closeModal('modal-timesheet');
+  renderTimesheets(); renderStaff(); updateBadges();
+}
+function renderTimesheets() {
+  const flagged = timesheets.filter(t => t.flagged).length;
+  const totalH = timesheets.reduce((a, t) => a + t.hours, 0);
+  
+  document.getElementById('ts-stat-total').textContent = timesheets.length;
+  document.getElementById('ts-stat-flagged').textContent = flagged;
+  document.getElementById('ts-stat-hours').textContent = totalH.toFixed(1);
+  document.getElementById('ts-stat-hr').textContent = flagged;
+  document.getElementById('sv-flags').textContent = flagged;
 
-    document.getElementById("staff-body").innerHTML = data.map(s => `
-      <tr>
-        <td class="mono">${s.staffId}</td>
-        <td style="font-weight:500">${s.name}</td>
-        <td><span class="badge ${s.isAvailable ? "b-avail" : "b-busy"}">${s.isAvailable ? "Available" : "On Call"}</span></td>
-        <td class="mono">${s.hoursWorked}h</td>
-        <td style="color:var(--muted)">${s.homes.join(", ")}</td>
-      </tr>`).join("");
+  const tbody = document.getElementById('ts-body');
+  if (!timesheets.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">No records submitted.</td></tr>'; return; }
 
-    document.getElementById("ts-staff").innerHTML =
-      data.map(s => `<option value="${s.staffId}">${s.name}</option>`).join("");
-  }
+  tbody.innerHTML = timesheets.slice().reverse().map(t =>
+    `<tr>
+      <td style="font-weight:500">${t.staff}</td>
+      <td class="mono-cell">${t.incidentId}</td>
+      <td class="mono-cell">${t.hours}h</td>
+      <td>${t.flagged ? '<span style="color:var(--red);font-weight:500;">Flagged</span>' : '<span style="color:var(--text-muted);">Standard</span>'}</td>
+      <td class="mono-cell">${t.time.toLocaleTimeString('en-NZ',{hour:'2-digit',minute:'2-digit'})}</td>
+    </tr>`
+  ).join('');
+}
 
-  async function loadIncidents() {
-    const data = await fetch(`${API}/incidents`).then(r => r.json());
+function renderNotifications() {
+  const all = NotificationService.getAll();
+  const list = document.getElementById('notif-list');
+  
+  if (!all.length) { list.innerHTML = '<div class="empty">No messages found.</div>'; return; }
 
-    document.getElementById("stat-total").textContent = data.length;
-    document.getElementById("stat-open").textContent  = data.filter(i => i.status === "Open").length;
+  const allStaff = [...managers, ...supportWorkers];
+  list.innerHTML = all.slice().reverse().map(n => {
+    const sName = (allStaff.find(s => s.id === n.recipientId) || {}).name || n.recipientId;
+    return `<div class="notif-entry ${n.acknowledged ? '' : 'unread'}" onclick="acknowledgeNotif('${n.id}')">
+      <div class="status-dot ${n.acknowledged ? 'grey' : 'amber'}" style="margin-top:6px;"></div>
+      <div class="notif-body">
+        <div class="notif-header">
+          <span class="notif-recipient">${sName}</span>
+          <span class="notif-time">${n.sentAt.toLocaleTimeString('en-NZ', {hour:'2-digit',minute:'2-digit'})}</span>
+        </div>
+        <div class="notif-msg">${n.message}</div>
+      </div>
+    </div>`;
+  }).join('');
 
-    if (!data.length) {
-      document.getElementById("incident-body").innerHTML =
-        `<tr><td colspan="6" class="empty">No incidents logged.</td></tr>`;
-      return;
-    }
+  document.getElementById('notif-recipient-sel').innerHTML = allStaff.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+}
 
-    document.getElementById("incident-body").innerHTML = data.map(i => `
-      <tr>
-        <td class="mono">${i.incidentId}</td>
-        <td style="padding: 9px 11px;">${sevBadge(i.severity)}</td>
-        <td><span class="badge ${i.status === "Resolved" ? "b-resolved" : "b-open"}">${i.status}</span></td>
-        <td style="color:var(--muted)">${i.allocatedWorker}</td>
-        <td class="mono" style="color:var(--muted)">${i.timestamp}</td>
-        <td>${i.status === "Open"
-          ? `<button class="btn btn-resolve" onclick="resolveIncident('${i.incidentId}')">Resolve</button>`
-          : "—"}</td>
-      </tr>`).join("");
+function acknowledgeNotif(id) {
+  const n = NotificationService.getAll().find(x => x.id === id);
+  if (n) n.acknowledged = true;
+  renderNotifications(); updateBadges();
+}
 
-    document.getElementById("ts-incident").innerHTML =
-      data.map(i => `<option value="${i.incidentId}">${i.incidentId} (${i.severity})</option>`).join("");
-  }
+function markAllRead() {
+  NotificationService.getAll().forEach(n => n.acknowledged = true);
+  renderNotifications(); updateBadges();
+}
+function sendDirectNotification() {
+  const recipient = document.getElementById('notif-recipient-sel').value;
+  const channel = document.getElementById('notif-channel-sel').value;
+  const msg = document.getElementById('notif-msg-input').value.trim();
+  if (!msg) return;
+  
+  NotificationService.send(recipient, msg, channel);
+  
+  // Updated log message
+  AuditLogService.log(CURRENT_USER.id, 'Sent Direct Message', recipient);
+  
+  document.getElementById('notif-msg-input').value = '';
+  toast('Message dispatched successfully.');
+  renderNotifications(); updateBadges();
+}
 
-  async function createIncident() {
-    const severity = document.getElementById("severity").value;
-    const data = await fetch(`${API}/incidents`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ severity })
-    }).then(r => r.json());
+function sendBroadcast() {
+  const msg = document.getElementById('bc-msg').value.trim();
+  const ch = document.getElementById('bc-channel').value;
+  if (!msg) return;
+  
+  const ids = [...managers, ...supportWorkers].map(s => s.id);
+  NotificationService.broadcast(ids, msg, ch);
+  
+  // Updated log message
+  AuditLogService.log(CURRENT_USER.id, 'Broadcasted System Message', 'All Staff');
+  
+  closeModal('modal-broadcast');
+  toast('Broadcast dispatched to all personnel.');
+  renderNotifications(); updateBadges();
+}
+function renderAuditLog() {
+  const entries = AuditLogService.getAll();
+  document.getElementById('audit-count').textContent = `${entries.length} events`;
+  const list = document.getElementById('audit-list');
+  if (!entries.length) { list.innerHTML = '<div class="empty">No events recorded.</div>'; return; }
+  
+  list.innerHTML = entries.slice().reverse().map(e =>
+    `<div class="log-entry">
+      <span class="log-ts">${e.timestamp.toLocaleTimeString('en-NZ', {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</span>
+      <span class="log-actor">${e.actorId}</span>
+      <span class="log-action">${e.action}</span>
+      <span class="log-target">${e.targetId}</span>
+    </div>`
+  ).join('');
+}
 
-    toast(`${data.incidentId} logged. Allocated to: ${data.allocatedTo}`);
-    loadIncidents();
-    loadStaff();
-  }
+function renderResidents() {
+  document.getElementById('resident-grid').innerHTML = residents.map(r =>
+    `<div class="entity-card">
+      <div class="entity-hdr" style="margin-bottom:8px;">
+        <div>
+          <div class="entity-name">${r.name}</div>
+          <div class="entity-sub">${r.id}</div>
+        </div>
+      </div>
+      <div class="entity-row"><span class="entity-label">Medication</span><span class="entity-val">${r.meds}</span></div>
+      <div class="entity-row"><span class="entity-label">Allergies</span><span class="entity-val">${r.allergies}</span></div>
+      <div class="entity-row"><span class="entity-label">Directives</span><span class="entity-val">${r.acd}</span></div>
+      <div class="entity-tags">${r.flags.map(f => `<span class="tag">${f}</span>`).join('')}</div>
+    </div>`
+  ).join('');
+}
 
-  async function resolveIncident(id) {
-    await fetch(`${API}/incidents/${id}/resolve`, { method: "POST" });
-    toast(`${id} resolved. Worker returned to roster.`);
-    loadIncidents();
-    loadStaff();
-  }
+function updateBadges() {
+  document.getElementById('badge-incidents').textContent = incidents.filter(i => i.status === 'Active').length || '';
+  document.getElementById('badge-staff').textContent = supportWorkers.filter(w => w.available).length || '';
+  document.getElementById('badge-ts').textContent = timesheets.filter(t => t.flagged).length || '';
+  
+  const unread = NotificationService.getAll().filter(n => !n.acknowledged).length;
+  document.getElementById('badge-notif').textContent = unread || '';
+  
+  const dot = document.getElementById('notif-dot');
+  dot.className = unread > 0 ? 'status-dot amber' : 'status-dot grey';
+}
 
-  async function loadTimesheets() {
-    const data = await fetch(`${API}/timesheets`).then(r => r.json());
-    document.getElementById("stat-flags").textContent = data.filter(t => t.discrepancyFlag).length;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; 
+  el.style.display = 'block';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.style.display = 'none', 3000);
+}
 
-    if (!data.length) {
-      document.getElementById("ts-body").innerHTML =
-        `<tr><td colspan="4" class="empty">No timesheet records.</td></tr>`;
-      return;
-    }
+// Init
+renderStaff(); renderIncidents(); renderTimesheets();
+renderNotifications(); renderResidents(); renderAuditLog();
+updateBadges();
 
-    document.getElementById("ts-body").innerHTML = data.map(t => `
-      <tr>
-        <td style="font-weight:500">${t.staff}</td>
-        <td class="mono">${t.incident}</td>
-        <td class="mono">${t.hoursLogged}h</td>
-        <td><span class="badge ${t.discrepancyFlag ? "b-flag" : "b-ok"}">${t.discrepancyFlag ? "Flagged" : "OK"}</span></td>
-      </tr>`).join("");
-  }
-
-  async function logTimesheet() {
-    const staffId    = document.getElementById("ts-staff").value;
-    const incidentId = document.getElementById("ts-incident").value;
-    const hours      = parseFloat(document.getElementById("ts-hours").value);
-
-    if (!staffId || !incidentId || isNaN(hours)) {
-      toast("Please fill in all timesheet fields.");
-      return;
-    }
-
-    const data = await fetch(`${API}/timesheets`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ staffId, incidentId, hoursLogged: hours })
-    }).then(r => r.json());
-
-    toast(`Logged ${data.hoursLogged}h. ${data.discrepancyFlag ? "Flagged — exceeds 12h limit." : "No issues."}`);
-    loadTimesheets();
-  }
-
-  // load on startup
-  loadStaff();
-  loadIncidents();
-  loadTimesheets();
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
 </script>
 </body>
 </html>

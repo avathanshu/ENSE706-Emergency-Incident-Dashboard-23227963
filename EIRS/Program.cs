@@ -1,6 +1,21 @@
 using System;
 using System.Collections.Generic;
-using EIRS;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using EIRS; // Keep your namespace imports
+
+// 1. Initialize the Web Application Builder
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// 2. Enable serving index.html as the default file from wwwroot
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+// 3. Keep your existing backend console logic running at startup
+Console.WriteLine("==============================================");
+Console.WriteLine("    EIRS BACKEND CORE INITIALIZATION          ");
+Console.WriteLine("==============================================");
 
 var audit  = AuditLogService.Instance;
 var notify = NotificationService.Instance;
@@ -39,3 +54,9 @@ timeline.AddEntry("SW001", "Arrived at scene, resident stable");
 timeline.PrintTimeline();
 
 audit.PrintAll();
+Console.WriteLine("==============================================");
+
+// 4. Start the Web Server
+Console.WriteLine("\n🚀 EIRS Server Web Dashboard running!");
+Console.WriteLine("👉 Open: http://localhost:5000 or https://localhost:5001");
+app.Run();

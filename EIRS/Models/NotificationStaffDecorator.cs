@@ -9,11 +9,6 @@
 //   Not every staff component needs every channel — some may only need in-app alerts,
 //   others may require SMS escalation. Wrapping at the call site keeps StaffMember focused
 //   on workforce state and lets notification logic evolve independently.
-//
-//   Example usage:
-//     var decorated = new NotificationStaffDecorator(worker, "SMS");
-//     decorated.Notify("You are needed for Incident INC-001");
-//
 // Relationship summary (from class diagram):
 //   StaffDecorator  <|--  NotificationStaffDecorator   (inheritance)
 //   (uses NotificationService via dependency)
